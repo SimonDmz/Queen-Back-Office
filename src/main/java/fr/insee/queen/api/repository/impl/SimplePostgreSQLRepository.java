@@ -6,7 +6,6 @@ import fr.insee.queen.api.dto.statedata.StateDataDto;
 import fr.insee.queen.api.dto.surveyunit.SurveyUnitResponseDto;
 import fr.insee.queen.api.repository.SimpleApiRepository;
 
-import org.hibernate.annotations.common.util.impl.Log_.logger;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
