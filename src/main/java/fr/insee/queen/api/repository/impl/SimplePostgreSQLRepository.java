@@ -89,6 +89,8 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
     }
 
     private void insertSurveyUnitStateDate(String surveyUnitId, StateDataDto stateData){
+        if (stateData == null)
+            return;
         Long date = stateData.getDate();
         String state = stateData.getState().name();
         String currentPage = stateData.getCurrentPage();
