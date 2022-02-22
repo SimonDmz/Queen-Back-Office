@@ -107,6 +107,7 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
         try {
             json.setValue(jsonValue.toString());
         } catch (SQLException throwables) {
+            LOGGER.error("Error when inserting in {} - {}",table,throwables.getMessage());
             throwables.printStackTrace();
         }
         jdbcTemplate.update(qString,UUID.randomUUID(),json,surveyUnitId);
@@ -120,6 +121,7 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
         try {
             q.setValue(jsonValue.toString());
         } catch (SQLException throwables) {
+            LOGGER.error("Error when inserting in {} - {}",table,throwables.getMessage());
             throwables.printStackTrace();
         }
         jdbcTemplate.update(qString, q, surveyUnitId);
