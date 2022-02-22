@@ -5,6 +5,8 @@ import fr.insee.queen.api.controller.StateDataController;
 import fr.insee.queen.api.dto.statedata.StateDataDto;
 import fr.insee.queen.api.dto.surveyunit.SurveyUnitResponseDto;
 import fr.insee.queen.api.repository.SimpleApiRepository;
+
+import org.hibernate.annotations.common.util.impl.Log_.logger;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +77,7 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
         String su ="INSERT INTO survey_unit (id, campaign_id, questionnaire_model_id)\n" +
                 "VALUES (?,?,?)\n" +
                 "ON CONFLICT (id) DO UPDATE SET campaign_id=?, questionnaire_model_id=?";
+        LOGGER.info("Request for SU creation : {}", su);
         jdbcTemplate.update(su,
                 surveyUnitResponseDto.getId(),
                 campaignId, surveyUnitResponseDto.getQuestionnaireId(),
@@ -91,11 +94,13 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
         String state = stateData.getState().name();
         String currentPage = stateData.getCurrentPage();
         String qString = "INSERT INTO state_data (id,current_page,date,state,survey_unit_id) VALUES (?,?,?,?,?)";
+        LOGGER.info("Request for SU state-data insertion : {}", qString);
         jdbcTemplate.update(qString,UUID.randomUUID(),currentPage,date,state,surveyUnitId);
     }
 
     private void insertJsonValueOfSurveyUnit(String table, String surveyUnitId, JsonNode jsonValue){
         String qString = String.format("INSERT INTO %s (id, value, survey_unit_id) VALUES (?,?,?)",table);
+        LOGGER.info("Request for SU Json value insertion : {}", qString);
         PGobject json = new PGobject();
         json.setType("json");
         try {
