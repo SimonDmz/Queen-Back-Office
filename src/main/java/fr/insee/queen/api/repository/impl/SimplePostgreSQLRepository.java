@@ -89,7 +89,7 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
     }
 
     private void insertSurveyUnitStateDate(String surveyUnitId, StateDataDto stateData){
-        if (stateData == null || stateData.getDate() == null || statData.getState()==null )
+        if (stateData == null || stateData.getDate() == null || stateData.getState()==null )
             return;
         Long date = stateData.getDate();
         String state = stateData.getState().name();
