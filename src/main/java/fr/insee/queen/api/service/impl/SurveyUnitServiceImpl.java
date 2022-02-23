@@ -319,8 +319,8 @@ public class SurveyUnitServiceImpl extends AbstractService<SurveyUnit, String> i
 			simpleApiRepository.createSurveyUnit(id,su);
 			return HttpStatus.OK;
 		}catch (Exception e){
-			e.printStackTrace();
-			LOGGER.error("POST survey-unit {} for campaign {} : error => {}", id, su.getId(),e.getMessage());
+			LOGGER.error("Error when POST survey-unit {} for campaign {}", id, su.getId());
+			LOGGER.error("Error is",e);
 			return HttpStatus.BAD_REQUEST;
 		}
 	}

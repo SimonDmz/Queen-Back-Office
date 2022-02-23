@@ -1,7 +1,6 @@
 package fr.insee.queen.api.repository.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.insee.queen.api.controller.StateDataController;
 import fr.insee.queen.api.dto.statedata.StateDataDto;
 import fr.insee.queen.api.dto.surveyunit.SurveyUnitResponseDto;
 import fr.insee.queen.api.repository.SimpleApiRepository;
@@ -10,11 +9,9 @@ import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -76,8 +73,7 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
         String su ="INSERT INTO survey_unit (id, campaign_id, questionnaire_model_id)\n" +
                 "VALUES (?,?,?)\n" +
                 "ON CONFLICT (id) DO UPDATE SET campaign_id=?, questionnaire_model_id=?";
-        LOGGER.info("Request for SU creation : {}", su);
-        jdbcTemplate.update(su,
+                jdbcTemplate.update(su,
                 surveyUnitResponseDto.getId(),
                 campaignId, surveyUnitResponseDto.getQuestionnaireId(),
                 campaignId, surveyUnitResponseDto.getQuestionnaireId());
@@ -89,19 +85,16 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
     }
 
     private void insertSurveyUnitStateDate(String surveyUnitId, StateDataDto stateData){
-        if (stateData == null || stateData.getDate() == null || stateData.getState()==null )
-            return;
-        Long date = stateData.getDate();
-        String state = stateData.getState().name();
-        String currentPage = stateData.getCurrentPage();
+        StateDataDto stateDataNpeProof = stateData != null ? stateData : new StateDataDto();
+        Long date = stateDataNpeProof.getDate();
+        String state = stateDataNpeProof.getState() != null ? stateDataNpeProof.getState().name() : null;
+        String currentPage = stateDataNpeProof.getCurrentPage();
         String qString = "INSERT INTO state_data (id,current_page,date,state,survey_unit_id) VALUES (?,?,?,?,?)";
-        LOGGER.info("Request for SU state-data insertion : {}", qString);
         jdbcTemplate.update(qString,UUID.randomUUID(),currentPage,date,state,surveyUnitId);
     }
 
     private void insertJsonValueOfSurveyUnit(String table, String surveyUnitId, JsonNode jsonValue){
         String qString = String.format("INSERT INTO %s (id, value, survey_unit_id) VALUES (?,?,?)",table);
-        LOGGER.info("Request for SU Json value insertion : {}", qString);
         PGobject json = new PGobject();
         json.setType("json");
         try {
@@ -121,7 +114,7 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
         try {
             q.setValue(jsonValue.toString());
         } catch (SQLException throwables) {
-            LOGGER.error("Error when inserting in {} - {}",table,throwables.getMessage());
+            LOGGER.error("Error when updating in {} - {}",table,throwables.getMessage());
             throwables.printStackTrace();
         }
         jdbcTemplate.update(qString, q, surveyUnitId);
