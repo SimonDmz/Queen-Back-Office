@@ -313,16 +313,16 @@ public class SurveyUnitServiceImpl extends AbstractService<SurveyUnit, String> i
 	}
 
 	@Override
-	public HttpStatus postSurveyUnitImproved(String id, SurveyUnitResponseDto su) {
+	public ResponseEntity<String> postSurveyUnitImproved(String id, SurveyUnitResponseDto su) {
+		if(!simpleApiRepository.idCampaignIsPresent(id)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campaign id not found");
+		// TODO check if questionnaire exist
 		try{
-			// TODO check if campaign or questionnaire exist
 			simpleApiRepository.createSurveyUnit(id,su);
-			return HttpStatus.OK;
 		}catch (Exception e){
-			LOGGER.error("Error when POST survey-unit {} for campaign {}", id, su.getId());
 			LOGGER.error("Error is",e);
-			return HttpStatus.BAD_REQUEST;
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Error when POST survey-unit %s for campaign %s", su.getId(),id));
 		}
+		return ResponseEntity.status(HttpStatus.OK).body("Survey unit created");
 	}
 
 	@Override

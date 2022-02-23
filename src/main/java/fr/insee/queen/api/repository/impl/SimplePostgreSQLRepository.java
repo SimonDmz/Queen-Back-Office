@@ -1,6 +1,7 @@
 package fr.insee.queen.api.repository.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import fr.insee.queen.api.dto.statedata.StateDataDto;
 import fr.insee.queen.api.dto.surveyunit.SurveyUnitResponseDto;
 import fr.insee.queen.api.repository.SimpleApiRepository;
@@ -9,6 +10,7 @@ import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -118,5 +120,17 @@ public class SimplePostgreSQLRepository implements SimpleApiRepository {
             throwables.printStackTrace();
         }
         jdbcTemplate.update(qString, q, surveyUnitId);
+    }
+
+    @Override
+    public boolean idCampaignIsPresent(String id) {
+        String qStringGetCampaignID = "SELECT id FROM campaign WHERE id=?";
+        try {
+            jdbcTemplate.queryForObject(
+                    qStringGetCampaignID, new Object[] { id }, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
+        return true;
     }
 }
