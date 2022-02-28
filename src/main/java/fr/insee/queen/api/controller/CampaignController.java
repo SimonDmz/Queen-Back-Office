@@ -66,7 +66,7 @@ public class CampaignController {
 	@ApiOperation(value = "Get list of campaigns")
 	@GetMapping(path = "/campaigns")
 	public ResponseEntity<Object> getListCampaign(){
-		List<CampaignResponseDto> resp = campaignservice.getAllCampaigns();
+		List<CampaignResponseDto> resp = campaignservice.findDtoBy();
 		LOGGER.info("GET campaigns resulting in 200");
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}

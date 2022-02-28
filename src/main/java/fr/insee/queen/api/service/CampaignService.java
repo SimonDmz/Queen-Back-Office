@@ -13,7 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 
 public interface CampaignService extends BaseService<Campaign, String> {
 
-	List<CampaignDto> findDtoBy();
+	List<CampaignResponseDto> findDtoBy();
 
 	@Cacheable("campaign")
 	Optional<Campaign> findById(String id);

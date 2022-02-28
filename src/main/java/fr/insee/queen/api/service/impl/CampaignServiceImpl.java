@@ -58,7 +58,7 @@ public class CampaignServiceImpl extends AbstractService<Campaign, String> imple
     }
 
 	@Override
-	public List<CampaignDto> findDtoBy() {
+	public List<CampaignResponseDto> findDtoBy() {
 		return campaignRepository.findDtoBy();
 	}
 
